@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+  front_modrp:
+    build:
+      context: ../frontend/
+    links:
+      - back_modrp
+    depends_on:
+      - db_modrp
+      - back_modrp
+    ports:
+      - 8012:3000
+
+  back_modrp:
+    build:
+      context: ../backend/
+    links:
+      - db_modrp
+    depends_on:
+      - db_modrp
+    ports:
+      - 5312:5312
+
+  db_modrp:
+    image: postgres:11.2-alpine
+    environment:
+      POSTGRES_PASSWORD: modrp
+      POSTGRES_DB: modrp
+    ports:
+      - 5412:5432
+    volumes:
+      - db_modrp:/var/lib/postgresql/data
+
+volumes:
+  db_modrp:
